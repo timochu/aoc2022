@@ -5,7 +5,7 @@ let (|Rock|Paper|Scissors|) = function | 'A' | 'X' -> Rock | 'B' | 'Y' -> Paper 
 let (|Win|Draw|Lose|) = function | 'X' -> Lose | 'Y' -> Draw | _ -> Win
 
 let hands = System.IO.File.ReadAllLines "inputs/day02.txt" |> Array.map (fun l -> Seq.head l, Seq.last l)
-    
+
 hands
 |> Array.sumBy (
     function 
