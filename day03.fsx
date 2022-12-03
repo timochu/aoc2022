@@ -6,11 +6,11 @@ let rucksacks = "inputs/day03.txt" |> System.IO.File.ReadAllLines
 
 rucksacks
 |> Array.sumBy(
-    Seq.map priority.IndexOf
-    >> Seq.splitInto 2
+    Seq.splitInto 2
     >> Seq.map set
     >> Set.intersectMany
-    >> Set.maxElement)
+    >> Set.maxElement
+    >> priority.IndexOf)
 |> printfn "Part 1: %i"
 
 rucksacks
