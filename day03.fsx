@@ -6,7 +6,7 @@ let rucksacks = "inputs/day03.txt" |> System.IO.File.ReadAllLines
 
 rucksacks
 |> Array.sumBy(
-    Seq.map (fun c -> priority |> Seq.findIndex (fun i -> i = c))
+    Seq.map priority.IndexOf
     >> Seq.splitInto 2
     >> Seq.map set
     >> (fun x -> Set.intersect (Seq.head x) (Seq.last x))
@@ -19,5 +19,5 @@ rucksacks
     Array.map (Seq.toArray >> Set)
     >> Set.intersectMany
     >> Set.maxElement
-    >> (fun c -> priority |> Seq.findIndex (fun i -> i = c)))
+    >> priority.IndexOf)
 |> printfn "Part 2: %i"
