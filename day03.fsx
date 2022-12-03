@@ -11,4 +11,14 @@ let priority = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         >> Seq.map set
         >> (fun x -> Set.intersect (Seq.head x) (Seq.last x))
         >> Set.maxElement)
-|> printfn "%i"
+|> printfn "Part 1: %i"
+
+"inputs/day03.txt" 
+|> System.IO.File.ReadAllLines
+|> Array.chunkBySize 3
+|> Array.sumBy (
+    Array.map (Seq.toArray >> Set) 
+    >> Set.intersectMany
+    >> Set.maxElement
+    >> (fun c -> priority |> Seq.findIndex (fun i -> i = c)))
+|> printfn "Part 2: %i"
