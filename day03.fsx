@@ -2,9 +2,9 @@
 #time
 
 let priority = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+let rucksacks = "inputs/day03.txt" |> System.IO.File.ReadAllLines
 
-"inputs/day03.txt" 
-|> System.IO.File.ReadAllLines
+rucksacks
 |> Array.sumBy(
         Seq.map (fun c -> priority |> Seq.findIndex (fun i -> i = c))
         >> Seq.splitInto 2
@@ -13,11 +13,10 @@ let priority = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         >> Set.maxElement)
 |> printfn "Part 1: %i"
 
-"inputs/day03.txt" 
-|> System.IO.File.ReadAllLines
+rucksacks
 |> Array.chunkBySize 3
 |> Array.sumBy (
-    Array.map (Seq.toArray >> Set) 
+    Array.map (Seq.toArray >> Set)
     >> Set.intersectMany
     >> Set.maxElement
     >> (fun c -> priority |> Seq.findIndex (fun i -> i = c)))
