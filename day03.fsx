@@ -9,7 +9,7 @@ rucksacks
     Seq.map priority.IndexOf
     >> Seq.splitInto 2
     >> Seq.map set
-    >> (fun x -> Set.intersect (Seq.head x) (Seq.last x))
+    >> Set.intersectMany
     >> Set.maxElement)
 |> printfn "Part 1: %i"
 
