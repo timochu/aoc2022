@@ -16,7 +16,7 @@ rucksacks
 rucksacks
 |> Array.chunkBySize 3
 |> Array.sumBy(
-    Array.map (Seq.toArray >> Set)
+    Array.map set
     >> Set.intersectMany
     >> Set.maxElement
     >> priority.IndexOf)
