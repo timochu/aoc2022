@@ -1,12 +1,12 @@
 // puzzle: https://adventofcode.com/2022/day/4
 #time
-let split (separator : char[]) (s : string) = s.Split separator |> List.ofArray
+let split (separator : char[]) (s : string) = s.Split separator
 
 "inputs/day04.txt"
 |> System.IO.File.ReadAllLines
 |> Array.where (
     split [|',';'-'|]
-    >> List.map int
+    >> Array.map int
     >> fun x -> Set [x.[0] .. x.[1]], Set [x.[2] .. x.[3]]
     >> fun (x, y) -> Set.isSubset x y || Set.isSubset y x)
 |> Array.length
@@ -16,7 +16,7 @@ let split (separator : char[]) (s : string) = s.Split separator |> List.ofArray
 |> System.IO.File.ReadAllLines
 |> Array.where (
     split [|',';'-'|]
-    >> List.map int
+    >> Array.map int
     >> fun x -> Set [x.[0] .. x.[1]], Set [x.[2] .. x.[3]]
     >> fun (x, y) -> Set.intersect x y |> Seq.isEmpty |> not)
 |> Array.length
