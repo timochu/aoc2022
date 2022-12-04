@@ -2,8 +2,9 @@
 #time
 let split (separator : char[]) (s : string) = s.Split separator
 
-"inputs/day04.txt"
-|> System.IO.File.ReadAllLines
+let pairings = System.IO.File.ReadAllLines "inputs/day04.txt"
+
+pairings
 |> Array.where (
     split [|',';'-'|]
     >> Array.map int
@@ -12,12 +13,13 @@ let split (separator : char[]) (s : string) = s.Split separator
 |> Array.length
 |> printfn "Part 1: %i"
 
-"inputs/day04.txt"
-|> System.IO.File.ReadAllLines
+pairings
 |> Array.where (
     split [|',';'-'|]
     >> Array.map int
-    >> fun x -> Set [x.[0] .. x.[1]], Set [x.[2] .. x.[3]]
-    >> fun (x, y) -> Set.intersect x y |> Seq.isEmpty |> not)
+    >> fun x -> [Set [x.[0] .. x.[1]]; Set [x.[2] .. x.[3]]]
+    >> Set.intersectMany
+    >> Seq.isEmpty
+    >> not)
 |> Array.length
 |> printfn "Part 2: %i"
