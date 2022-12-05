@@ -10,30 +10,19 @@ let stacksInput, ordersInput =
     |> fun i -> Array.take 8 i, Array.skip 10 i
 
 let stacks = 
-    [| 1 .. +4 .. 33 |]
-    |> Array.map (fun column ->
-        [| 7 .. -1 .. 0 |]
-        |> Seq.map (fun row ->
-            stacksInput.[row].[column])
-            |> Seq.where ((=) ' ' >> not)
-            |> Stack)
+    [| for column in 1 .. +4 .. 33 -> 
+        [| for row in 7 .. -1 .. 0 -> stacksInput.[row].[column] |]
+        |> Seq.where ((=) ' ' >> not)
+        |> Stack |]
 
 let orders =
     ordersInput
     |> Array.map (
         fun x -> x.Split([|"move "; " from "; " to "|], RemoveEmptyEntries)
-        >> Array.map int)
+        >> Array.map (int >> (fun x -> x-1)) >> (fun x -> x.[0], x.[1], x.[2])) 
 
 orders
-|> Array.iter (fun x ->
-    [|1 .. x.[0]|]
-    |> Array.iter (fun _ ->
-        let crate = stacks.[x.[1]-1].Pop()
-        stacks.[x.[2]-1].Push(crate)
-    )
-)
+|> Array.map (fun (count, from, destination) ->
+    [| for _ in 0 .. count -> stacks.[from].Pop() |> stacks.[destination].Push |])
 
-stacks 
-|> Array.map (fun (x : Stack<char>) -> x.Peek())
-|> String
-|> printfn "Part 1: %s"
+printfn "Part 1: %s" (stacks |> Array.map (fun x -> x.Peek()) |> String)
