@@ -11,7 +11,7 @@ let stacks1, stacks2 =
     let stacks = input |> Array.take 8
     [| for column in 1 .. +4 .. 33 ->
         [| for row in 7 .. -1 .. 0 -> stacks.[row].[column] |]
-        |> Seq.where Char.IsLetterOrDigit
+        |> Seq.where Char.IsLetter
         |> fun s -> Stack s, Stack s |]
     |> Array.unzip
 
