@@ -22,27 +22,13 @@ let rec calculateSizes lines (path : string) files =
 
         calculateSizes (lines |> Array.tail) path f
 
-let result = calculateSizes output "" List.empty
-
-result 
-|> List.groupBy fst 
-|> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
-|> List.where (snd >> (>=) 100000) 
-|> List.sumBy snd
-|> printfn "Part 1: %i"
-
-let spaceNeeded =
-    result 
+let result =
+    let sizes = calculateSizes output "" List.empty
+    sizes 
     |> List.groupBy fst 
-    |> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
-    |> List.where (fun x -> x |> fst |> (=) "/") 
-    |> List.exactlyOne 
-    |> snd
-    |> fun spaceUsed -> 30000000 - (70000000 - spaceUsed)
+    |> List.map (fun (x,_) -> x, sizes |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
 
-result 
-|> List.groupBy fst 
-|> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
-|> List.sortBy snd
-|> List.find (fun (_, size) -> size > spaceNeeded)
-|> printfn "Part 2: %A"
+let spaceNeeded = result |> List.find (fst >> (=) "/") |> fun (_, spaceUsed) -> 30000000 - (70000000 - spaceUsed)
+
+printfn "Part 1: %i" (result |> List.where (snd >> (>=) 100000) |> List.sumBy snd)
+printfn "Part 2: %A" (result |> List.sortBy snd |> List.find (snd >> (<) spaceNeeded))
