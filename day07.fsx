@@ -2,7 +2,7 @@ let rec calculateSizes (currentPath : string) files lines =
     if lines |> Array.isEmpty then 
         files 
         |> List.groupBy fst 
-        |> List.map (fun (path, _) -> path, files |> List.sumBy (fun (p : string, size) -> if p.StartsWith path then size else 0))
+        |> List.map (fun (path, _) -> path, files |> List.where (fun (p : string, _) -> p.StartsWith path) |> List.sumBy snd)
     else
         let path, f =
             match lines |> Array.head with
