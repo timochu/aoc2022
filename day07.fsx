@@ -10,7 +10,7 @@ let rec calculateSizes (path : string) files lines =
         | l when l.StartsWith "$ cd"               -> $"{path}/{l.Substring(5)}", files
         | l when l.[0] |> System.Char.IsDigit      -> path, (path, l |> fun (i:string) -> i.Split " " |> Seq.head |> int) :: files
         | l when l.StartsWith "dir"                -> path, (path, 0) :: files
-        | _ -> path, files
+        | _                                        -> path, files
         ||> calculateSizes <| Array.tail lines
 
 let sizes = System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.skip 1 |> calculateSizes "/" []
