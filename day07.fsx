@@ -26,7 +26,32 @@ let result = calculateSizes output "" List.empty
 
 result 
 |> List.groupBy fst 
-|> List.map (fun (x,y) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
-|> List.where (fun (_, y) -> y <= 100000) 
+|> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
+|> List.where (snd >> (>=) 100000) 
 |> List.sumBy snd
 |> printfn "Part 1: %i"
+
+// let totalSpaceUsed = result |> List.where (fun x -> x |> fst |> (=) "/") |> List.exactlyOne |> snd
+
+let totalSpace = 70000000
+let totalSpaceNeeded = 30000000
+
+let spaceUsed =
+    result 
+    |> List.groupBy fst 
+    |> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
+    |> List.where (fun x -> x |> fst |> (=) "/") 
+    |> List.exactlyOne 
+    |> snd
+
+let spaceAvailable = totalSpace - spaceUsed
+let spaceNeeded = totalSpaceNeeded - spaceAvailable
+
+result 
+|> List.groupBy fst 
+|> List.map (fun (x,_) -> x, result |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
+|> List.sortBy snd
+|> List.find (fun (_, size) -> size > spaceNeeded)
+|> printfn "Part 2: %A"
+
+printfn "Part 2: %A" spaceNeeded
