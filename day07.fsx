@@ -1,12 +1,13 @@
-let output = System.IO.File.ReadAllLines "inputs/day07.txt"
-
 let rec calculateSizes lines (path : string) files =
-    if lines |> Array.isEmpty then files
+    if lines |> Array.isEmpty then 
+        files 
+        |> List.groupBy fst 
+        |> List.map (fun (x,_) -> x, files |> List.where (fun ((pp : string), _) -> pp.StartsWith(x)) |> List.sumBy snd) 
     else
         let line = lines |> Array.head
         let path =
             match line with
-            | "$ cd /" -> "/"
+            // | "$ cd /" -> "/"
             | "$ cd .." -> path.Substring(0, path |> Seq.findIndexBack ((=) '/'))
             | c when c.StartsWith("$ cd") && path = "/" -> $"/{c.Substring(5)}"
             | c when c.StartsWith("$ cd") -> $"{path}/{c.Substring(5)}"
@@ -22,13 +23,9 @@ let rec calculateSizes lines (path : string) files =
 
         calculateSizes (lines |> Array.tail) path f
 
-let result =
-    let sizes = calculateSizes output "" List.empty
-    sizes 
-    |> List.groupBy fst 
-    |> List.map (fun (x,_) -> x, sizes |> List.where (fun (path, _) -> path.StartsWith(x)) |> List.sumBy snd) 
+let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.skip 1) "/" List.empty
 
-let spaceNeeded = result |> List.find (fst >> (=) "/") |> fun (_, spaceUsed) -> 30000000 - (70000000 - spaceUsed)
+let spaceNeeded = sizes |> List.find (fst >> (=) "/") |> fun (_, spaceUsed) -> 30000000 - (70000000 - spaceUsed)
 
-printfn "Part 1: %i" (result |> List.where (snd >> (>=) 100000) |> List.sumBy snd)
-printfn "Part 2: %A" (result |> List.sortBy snd |> List.find (snd >> (<) spaceNeeded))
+printfn "Part 1: %i" (sizes |> List.where (snd >> (>=) 100000) |> List.sumBy snd)
+printfn "Part 2: %A" (sizes |> List.sortBy snd |> List.find (snd >> (<) spaceNeeded))
