@@ -7,8 +7,8 @@ let rec calculateSizes (path : string) files lines =
             | "$ cd .." -> path.Substring(0, path |> Seq.findIndexBack ((=) '/')), files
             | line when line.StartsWith("$ cd") && path = "/" -> $"/{line.Substring(5)}", files
             | line when line.StartsWith("$ cd") -> $"{path}/{line.Substring(5)}", files
-            | line when line |> Seq.head |> System.Char.IsDigit -> path,  files @ [(path, line |> Seq.takeWhile System.Char.IsDigit |> Seq.toArray |> System.String |> int)]
-            | line when line.StartsWith("dir") -> path, files @ [(path, 0)]
+            | line when line |> Seq.head |> System.Char.IsDigit -> path,  (path, line |> Seq.takeWhile System.Char.IsDigit |> Seq.toArray |> System.String |> int) :: files
+            | line when line.StartsWith("dir") -> path, (path, 0) :: files
             | _ -> path, files
         calculateSizes path f (lines |> Array.tail)
 
