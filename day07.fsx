@@ -1,4 +1,4 @@
-let rec calculateSizes (path : string) files lines = 
+let rec calculateSizes lines (path : string) files = 
     if lines |> Array.isEmpty  then 
         files 
         |> List.groupBy fst 
@@ -11,9 +11,9 @@ let rec calculateSizes (path : string) files lines =
         | l when l.[0] |> System.Char.IsDigit      -> path, (path, l |> fun (i:string) -> i.Split " " |> Seq.head |> int) :: files
         | l when l.StartsWith "dir"                -> path, (path, 0) :: files
         | _                                        -> path, files
-        ||> calculateSizes <| Array.tail lines
+        ||> calculateSizes (Array.tail lines)
 
-let sizes = System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.skip 1 |> calculateSizes "/" []
+let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.tail) "/" []
 let spaceNeeded = sizes |> List.find (fst >> (=) "/") |> fun (_, spaceUsed) -> 30000000 - (70000000 - spaceUsed)
 
 printfn "Part 1: %i" (sizes |> List.where (snd >> (>=) 100000) |> List.sumBy snd)
