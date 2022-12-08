@@ -2,22 +2,14 @@ let rec calculateSizes (path : string) files lines =
     if lines |> Array.isEmpty then 
         files |> List.groupBy fst |> List.map (fun (x,_) -> x, files |> List.sumBy (fun ((pp : string), size) -> if pp.StartsWith(x) then size else 0))
     else
-        let line = lines |> Array.head
-        let path =
-            match line with
-            | "$ cd .." -> path.Substring(0, path |> Seq.findIndexBack ((=) '/'))
-            | c when c.StartsWith("$ cd") && path = "/" -> $"/{c.Substring(5)}"
-            | c when c.StartsWith("$ cd") -> $"{path}/{c.Substring(5)}"
-            | _ -> path
-        
-        let f = 
-            if line |> Seq.head |> System.Char.IsDigit then
-                let size = line |> Seq.takeWhile System.Char.IsDigit |> Seq.toArray |> System.String |> int
-                files @ [(path, size)]
-            elif line.StartsWith("dir") then
-                files @ [(path, 0)]
-            else files
-
+        let path, f =
+            match lines |> Array.head with
+            | "$ cd .." -> path.Substring(0, path |> Seq.findIndexBack ((=) '/')), files
+            | line when line.StartsWith("$ cd") && path = "/" -> $"/{line.Substring(5)}", files
+            | line when line.StartsWith("$ cd") -> $"{path}/{line.Substring(5)}", files
+            | line when line |> Seq.head |> System.Char.IsDigit -> path,  files @ [(path, line |> Seq.takeWhile System.Char.IsDigit |> Seq.toArray |> System.String |> int)]
+            | line when line.StartsWith("dir") -> path, files @ [(path, 0)]
+            | _ -> path, files
         calculateSizes path f (lines |> Array.tail)
 
 let sizes = System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.skip 1 |> calculateSizes "/" []
