@@ -3,7 +3,6 @@ let rec calculateSizes lines (path : string) files =
         files 
         |> List.groupBy fst 
         |> List.map (fun (path, _) -> path, files |> List.where (fun (p : string, _) -> p.StartsWith path) |> List.sumBy snd)
-        |> Map
     else
         match lines |> Array.head with
         | "$ ls" -> path, files
@@ -15,7 +14,7 @@ let rec calculateSizes lines (path : string) files =
         ||> calculateSizes (lines |> Array.tail)
 
 let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.tail) "/" []
-let spaceNeeded = sizes |> Map.find "/" |> fun size -> 30000000 - (70000000 - size)
+let spaceNeeded = sizes |> List.find (fst >> (=) "/") |> fun (_, size) -> 30000000 - (70000000 - size)
 
-printfn "Part 1: %i" (sizes |> Map.values |> Seq.where ((>=) 100000) |> Seq.sum)
-printfn "Part 2: %A" (sizes |> Map.values |> Seq.sort |> Seq.find ((<) spaceNeeded))
+printfn "Part 1: %i" (sizes |> List.where (snd >> (>=) 100000) |> List.sumBy snd)
+printfn "Part 2: %A" (sizes |> List.sortBy snd |> List.find (snd >> (<) spaceNeeded))
