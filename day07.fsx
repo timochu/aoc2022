@@ -7,7 +7,7 @@ let rec calculateSizes lines (path : string) files =
     else
         match lines |> Array.head with
         | "$ ls" -> path, files
-        | "$ cd .."                                      -> path.Remove(path.LastIndexOf "/"), files
+        | "$ cd .." -> path.Remove(path.LastIndexOf "/"), files
         | line when line.StartsWith "$ cd" && path = "/" -> $"/{line.Substring 5}", files
         | line when line.StartsWith "$ cd" -> $"{path}/{line.Substring 5}", files
         | line when line.StartsWith "dir" -> path, (path, 0) :: files
