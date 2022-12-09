@@ -4,13 +4,13 @@ let rec calculateSizes lines (path : string) files =
         |> List.groupBy fst 
         |> List.map (fun (path, _) -> path, files |> List.where (fun (p : string, _) -> p.StartsWith path) |> List.sumBy snd)
     else
-        match lines |> Array.head with
-        | "$ ls" -> path, files
-        | "$ cd .." -> path.Remove(path.LastIndexOf "/"), files
-        | line when line.StartsWith "$ cd" && path = "/" -> $"/{line.Substring 5}", files
-        | line when line.StartsWith "$ cd" -> $"{path}/{line.Substring 5}", files
-        | line when line.StartsWith "dir" -> path, (path, 0) :: files
-        | file -> path, (path, file |> Seq.takeWhile System.Char.IsDigit |> Array.ofSeq |> System.String |> int) :: files
+        match lines |> Array.head |> (fun (s : string) -> s.Split " ") with
+        | [|"$"; "ls"|] -> path, files
+        | [|"$"; "cd" ; ".."|] -> path.Remove(path.LastIndexOf "/"), files
+        | [|"$"; "cd" ; dir|] when path = "/" -> $"/{dir}", files
+        | [|"$"; "cd" ; dir|] -> $"{path}/{dir}", files
+        | [|"dir"; _ |] -> path, (path, 0) :: files
+        | [|size; _ |] -> path, (path, size |> int) :: files
         ||> calculateSizes (lines |> Array.tail)
 
 let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.tail) "/" []
