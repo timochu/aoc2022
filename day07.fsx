@@ -14,7 +14,7 @@ let rec calculateSizes lines (path : string) files =
         | file -> path, (path, file |> Seq.takeWhile System.Char.IsDigit |> Array.ofSeq |> System.String |> int) :: files
         ||> calculateSizes (lines |> Array.tail)
 
-let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt") "/" []
+let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.tail) "/" []
 let spaceNeeded = sizes |> Map.find "/" |> fun size -> 30000000 - (70000000 - size)
 
 printfn "Part 1: %i" (sizes |> Map.values |> Seq.where ((>=) 100000) |> Seq.sum)
