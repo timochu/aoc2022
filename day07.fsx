@@ -9,7 +9,7 @@ let rec calculateSizes lines (path : string) files =
         |> Map
     | head :: tail ->
         match head with
-        | "$ cd .."                                -> path.Substring(0, path |> Seq.findIndexBack ((=) '/')), files
+        | "$ cd .."                                -> path.Substring(0, path.LastIndexOf "/"), files
         | l when l.StartsWith "$ cd" && path = "/" -> $"/{l.Substring 5}", files
         | l when l.StartsWith "$ cd"               -> $"{path}/{l.Substring 5}", files
         | l when l.[0] |> Char.IsDigit             -> path, (path, l |> Seq.takeWhile Char.IsDigit |> Array.ofSeq |> String |> int) :: files
