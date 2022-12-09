@@ -5,12 +5,12 @@ let rec calculateSizes lines (path : string) files =
         |> List.map (fun (path, _) -> path, files |> List.where (fun (p : string, _) -> p.StartsWith path) |> List.sumBy snd)
     else
         match lines |> Array.head |> (fun (s : string) -> s.Split " ") with
-        | [|"$"; "ls"|] -> path, files
-        | [|"$"; "cd" ; ".."|] -> path.Remove(path.LastIndexOf "/"), files
+        | [|"$"; "ls"|]                       -> path, files
+        | [|"$"; "cd" ; ".."|]                -> path.Remove(path.LastIndexOf "/"), files
         | [|"$"; "cd" ; dir|] when path = "/" -> $"/{dir}", files
-        | [|"$"; "cd" ; dir|] -> $"{path}/{dir}", files
-        | [|"dir"; _ |] -> path, (path, 0) :: files
-        | [|size; _ |] -> path, (path, size |> int) :: files
+        | [|"$"; "cd" ; dir|]                 -> $"{path}/{dir}", files
+        | [|"dir"; _ |]                       -> path, (path, 0) :: files
+        | [|size; _ |]                        -> path, (path, size |> int) :: files
         ||> calculateSizes (lines |> Array.tail)
 
 let sizes = calculateSizes (System.IO.File.ReadAllLines "inputs/day07.txt" |> Array.tail) "/" []
