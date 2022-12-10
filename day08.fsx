@@ -11,9 +11,9 @@ let rec checkVisibilityAndScore (map : (bool * int) list) (trees : int list) =
     | i when i = trees.Length -> map
     | i ->
         let visibilityRight = trees.[..i-1] |> List.forall ((>) trees.[i])
-        let visibilityLeft = trees.[i+1..] |> List.forall ((>) trees.[i])
-        let scoreRight = trees.[..i-1] |> List.rev |> calculateScore 0 trees.[i]
-        let scoreLeft = trees.[i+1..] |> calculateScore 0 trees.[i]
+        let visibilityLeft  = trees.[i+1..] |> List.forall ((>) trees.[i])
+        let scoreRight      = trees.[..i-1] |> List.rev |> calculateScore 0 trees.[i]
+        let scoreLeft       = trees.[i+1..] |> calculateScore 0 trees.[i]
         checkVisibilityAndScore (map @ [visibilityRight || visibilityLeft, scoreRight * scoreLeft]) trees
 
 let horizontal = forest |> List.map (checkVisibilityAndScore [])
