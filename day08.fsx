@@ -21,4 +21,4 @@ let vertical = forest |> List.transpose |> List.map (checkVisibilityAndScore [])
 let result = (horizontal, vertical) ||> List.map2 (List.map2 (fun (v1,s1) (v2,s2) -> (v1 || v2), (s1 * s2) ))
 
 printfn "Part 1: %i" (result |> List.sumBy(List.where fst >> List.length))
-printfn "Part 2: %A" (result |> List.concat |> List.maxBy snd)
+printfn "Part 2: %i" (result |> List.concat |> List.maxBy snd |> snd)
