@@ -1,19 +1,13 @@
 let forest = System.IO.File.ReadAllLines "inputs/day08.txt" |> Array.map (Seq.map (System.Char.ToString >> int) >> Seq.toList) |> List.ofArray
 
-let rec calculateScore (score : int) (tree : int) (line : int list) =
-    match line with
-    | [] -> score
-    | h :: _ when tree = h || tree < h -> score + 1
-    | _ :: t -> calculateScore (score + 1) tree t
-
 let rec checkVisibilityAndScore (map : (bool * int) list) (trees : int list) =
     match map.Length with
     | i when i = trees.Length -> map
     | i ->
         let visibilityRight = trees.[..i-1] |> List.forall ((>) trees.[i])
         let visibilityLeft  = trees.[i+1..] |> List.forall ((>) trees.[i])
-        let scoreRight      = trees.[..i-1] |> List.rev |> calculateScore 0 trees.[i]
-        let scoreLeft       = trees.[i+1..] |> calculateScore 0 trees.[i]
+        let scoreRight      = trees.[..i-1] |> List.tryFindIndexBack ((<=) trees.[i]) |> function | Some x -> x + 1 | None -> i
+        let scoreLeft       = trees.[i+1..] |> List.tryFindIndex ((<=) trees.[i]) |> function | Some x -> x + 1 | None -> trees[i+1..].Length
         checkVisibilityAndScore (map @ [visibilityRight || visibilityLeft, scoreRight * scoreLeft]) trees
 
 let horizontal = forest |> List.map (checkVisibilityAndScore [])
