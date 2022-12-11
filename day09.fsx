@@ -1,14 +1,12 @@
-let head motions =
-    ([0,0], motions)
-    ||> Seq.fold (fun acc (direction, distance) ->
+let head =
+    Seq.fold (fun acc (direction, distance) ->
         let folder (acc : list<int * int>) _ =
             match direction, acc.Head with
             | 'U', (x,y) -> (x, y + 1) :: acc
             | 'D', (x,y) -> (x, y - 1) :: acc
             | 'L', (x,y) -> (x - 1, y) :: acc
             | _  , (x,y) -> (x + 1, y) :: acc
-        List.fold folder [acc.Head] [1 .. distance] @ acc)
-    |> List.rev
+        List.fold folder [acc.Head] [1 .. distance] @ acc) [0,0] >> List.rev
 
 let tail = 
     List.fold (fun acc (hx, hy) -> 
