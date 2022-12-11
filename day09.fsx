@@ -28,7 +28,7 @@ let rec solve2 (coords : (int * int) list) (motion : Motion) =
         let coords = (x-1,y) :: coords
         solve2 coords (Left (d-1))
 
-let rec solve (coordinates : (int * int) list) (motions : string list) =
+let rec headSolver (coordinates : (int * int) list) (motions : string list) =
     match motions with
     | [] -> coordinates
     | motion :: tail -> 
@@ -39,16 +39,16 @@ let rec solve (coordinates : (int * int) list) (motions : string list) =
             | LEFT i -> Left i
             | RIGHT i -> Right i
         let coords = solve2 [coordinates.Head] motion |> List.rev |> List.tail |> List.rev
-        solve (coords @ coordinates) tail
+        headSolver (coords @ coordinates) tail
 
 let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> List.ofArray
-let headCoords = solve [(0,0)] input |> List.rev
+let headCoords = headSolver [(0,0)] input |> List.rev
 
-// headCoords |> List.iter (printfn "%A")
+headCoords |> List.iter (printfn "%A")
 
 let rec tailSolver (coords : (int * int) list) (headCoords : (int * int) list) = 
     match headCoords, coords with
-    | [], _ -> coords
+    | [], _ -> coords |> List.rev
     | (hx,hy) :: t, (tx, ty) :: _ ->
         let relativePosition = hx - tx, hy - ty
         let distance = max (hx - tx |> abs) (hy - ty |> abs)
@@ -72,7 +72,27 @@ let rec tailSolver (coords : (int * int) list) (headCoords : (int * int) list) =
 
                 | (-2,-1) -> (tx-1, ty-1)
                 | (-2,1) -> (tx-1, ty+1)
+
+                | (2,2) -> (tx+1, ty+1)
+                | (2,-2) -> (tx+1, ty-1)
+                | (-2,2) -> (tx-1, ty+1)
+                | (-2,-2) -> (tx-1, ty-1)
+
+                | _ -> failwithf "relativePosition of %A, distance of %i" relativePosition distance
         tailSolver (newPosition :: coords) t
 
 
-printfn "Part 1: %i" (tailSolver [(0,0)] headCoords |> List.distinct |> List.length)
+printfn "Part 1: %i" (headCoords |> tailSolver [(0,0)] |> List.distinct |> List.length)
+printfn "Part 2: %i" (
+    headCoords 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> tailSolver [(0,0)] 
+    |> List.distinct 
+    |> List.length)
