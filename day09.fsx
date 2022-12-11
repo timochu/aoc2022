@@ -16,6 +16,7 @@ let tail coordinates =
         if max (hx - tx |> abs) (hy - ty |> abs) < 2 then acc.Head :: acc
         else (tx + (compare dx 0), ty + (compare dy 0)) :: acc) |> List.rev
 
-let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> Array.map (fun (s) -> Seq.head s, s.Substring 2 |> int)
+let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> Array.map (fun (s) -> s[0], int s[2..])
+
 printfn "Part 1: %i" (input |> head |> tail |> List.distinct |> List.length)
 printfn "Part 2: %i" (input |> head |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> List.distinct |> List.length)
