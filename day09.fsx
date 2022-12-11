@@ -1,16 +1,16 @@
 let head motions =
-    ([(0,0)], motions) ||> Seq.fold (fun acc (direction, distance) ->
-        let operation =
-            match direction with
-            | 'U' -> fun (x,y) -> x, y + 1
-            | 'D' -> fun (x,y) -> x, y - 1
-            | 'L' -> fun (x,y) -> x - 1, y
-            | _   -> fun (x,y) -> x + 1, y
-        (([acc.Head], [1 .. distance]) ||> List.fold (fun acc _ -> (operation acc.Head) :: acc)) @ acc) 
+    ([0,0], motions) ||> Seq.fold (fun acc (direction, distance) ->
+        let folder (acc : list<int * int>) _ =
+            match direction, acc.Head with
+            | 'U', (x,y) -> (x, y + 1) :: acc
+            | 'D', (x,y) -> (x, y - 1) :: acc
+            | 'L', (x,y) -> (x - 1, y) :: acc
+            | _  , (x,y) -> (x + 1, y) :: acc
+        List.fold folder [acc.Head] [1 .. distance] @ acc)
     |> List.rev
 
 let tail coordinates = 
-    ([(0,0)], coordinates) ||> List.fold (fun acc (hx, hy) -> 
+    ([0,0], coordinates) ||> List.fold (fun acc (hx, hy) -> 
         let tx, ty = acc.Head
         let dx, dy = hx - tx, hy - ty
         if max (hx - tx |> abs) (hy - ty |> abs) < 2 then acc.Head :: acc
