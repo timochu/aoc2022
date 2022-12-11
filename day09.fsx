@@ -14,10 +14,9 @@ let tail (coordinates : (int * int) list) =
         let tx, ty = acc.Head
         let dx, dy = hx - tx, hy - ty
         let distance = max (hx - tx |> abs) (hy - ty |> abs)
-        let newPosition = 
-            if distance < 2 then acc.Head
-            else tx + (compare dx 0), ty + (compare dy 0)
-        newPosition :: acc
+        if distance < 2 then acc.Head :: acc
+        else (tx + (compare dx 0), ty + (compare dy 0)) :: acc
+
     ) |> List.rev
 
 let input = System.IO.File.ReadAllLines "inputs/day09.txt"
