@@ -1,5 +1,5 @@
 let head motions =
-    ([(0,0)], motions) ||> Array.fold (fun acc (direction, distance) ->
+    ([(0,0)], motions) ||> Seq.fold (fun acc (direction, distance) ->
         let operation =
             match direction with
             | 'U' -> fun (x,y) -> x, y + 1
@@ -16,7 +16,7 @@ let tail coordinates =
         if max (hx - tx |> abs) (hy - ty |> abs) < 2 then acc.Head :: acc
         else (tx + (compare dx 0), ty + (compare dy 0)) :: acc) |> List.rev
 
-let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> Array.map (fun (s) -> s[0], int s[2..])
+let input = System.IO.File.ReadLines "inputs/day09.txt" |> Seq.map (fun (s) -> s[0], int s[2..])
 
 printfn "Part 1: %i" (input |> head |> tail |> List.distinct |> List.length)
 printfn "Part 2: %i" (input |> head |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> tail |> List.distinct |> List.length)
