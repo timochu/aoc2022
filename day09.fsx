@@ -1,5 +1,6 @@
 let head motions =
-    ([0,0], motions) ||> Seq.fold (fun acc (direction, distance) ->
+    ([0,0], motions)
+    ||> Seq.fold (fun acc (direction, distance) ->
         let folder (acc : list<int * int>) _ =
             match direction, acc.Head with
             | 'U', (x,y) -> (x, y + 1) :: acc
@@ -9,12 +10,12 @@ let head motions =
         List.fold folder [acc.Head] [1 .. distance] @ acc)
     |> List.rev
 
-let tail coordinates = 
-    ([0,0], coordinates) ||> List.fold (fun acc (hx, hy) -> 
-        let tx, ty = acc.Head
+let tail = 
+    List.fold (fun acc (hx, hy) -> 
+        let tx, ty = List.head acc
         let dx, dy = hx - tx, hy - ty
         if max (hx - tx |> abs) (hy - ty |> abs) < 2 then acc.Head :: acc
-        else (tx + (compare dx 0), ty + (compare dy 0)) :: acc) |> List.rev
+        else (tx + (compare dx 0), ty + (compare dy 0)) :: acc) [0,0] >> List.rev
 
 let input = System.IO.File.ReadLines "inputs/day09.txt" |> Seq.map (fun s -> s[0], int s[2..])
 
