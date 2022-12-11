@@ -20,15 +20,15 @@ let rec tailSolver (headCoords : (int * int) list) =
                 let xop = if x > 0 then +1 elif x < 0 then -1 else 0
                 let yop = if y > 0 then +1 elif y < 0 then -1 else 0
                 (tx+xop, ty+yop)
-        (newPosition :: coords)
+        newPosition :: coords
     ) |> List.rev
 
 let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> Array.toList
-let headCoords = headSolver input
 
-printfn "Part 1: %i" (headCoords |> tailSolver |> List.distinct |> List.length)
+printfn "Part 1: %i" (input |> headSolver |> tailSolver |> List.distinct |> List.length)
 printfn "Part 2: %i" (
-    headCoords 
+    input 
+    |> headSolver 
     |> tailSolver
     |> tailSolver
     |> tailSolver
