@@ -1,4 +1,3 @@
-#time
 let head =
     Seq.fold (fun acc (direction, distance) ->
         List.fold (fun acc i ->
