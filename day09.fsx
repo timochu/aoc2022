@@ -1,10 +1,8 @@
 let head =
-    List.rev <<
     Seq.fold (fun acc (direction, distance) ->
-        List.fold (fun acc i ->
+        acc @ List.fold (fun acc _ ->
             let x, y = acc |> List.last
-            match direction with | 'U' -> x,y+i | 'D' -> x,y-i | 'L' -> x-i,y | _ -> x+i,y
-            :: acc) [acc[0]] [1 .. distance] @ acc) [0,0]
+            acc @ [match direction with | 'U' -> x,y+1 | 'D' -> x,y-1 | 'L' -> x-1,y | _ -> x+1,y]) [List.last acc] [1..distance]) [0,0]
 
 let tail = 
     List.rev <<
