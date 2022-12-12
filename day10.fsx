@@ -9,4 +9,4 @@ let result =
 printfn "Part 1: %i" (result |> List.sumBy (fun (c,r) -> if List.contains c [20;60;100;140;180;220] then c*r else 0))
 
 printfn "Part 2:"
-result |> List.iter (fun (c, r) -> (if List.contains (c % 40) [r..r+2] then "█" else " ") |> (if c % 40 = 0 then printfn else printf) "%s")
+result |> List.iter (fun (c, r) -> (if List.contains (c % 40) [r..r+2] then "█" else " ") |> printf (if c % 40 = 0 then "%s\n" else "%s"))
