@@ -1,11 +1,11 @@
 open System.Collections.Generic
 
-let input = System.IO.File.ReadAllLines "inputs/day11.txt"
-let items, items2 = input |> fun s -> [for i in 1 .. 7 .. input.Length -> (s[i][18..]).Split ", " |> Array.map int64 |> fun x -> Queue x, Queue x] |> List.unzip
-let operations    = input |> fun s -> [for i in 2 .. 7 .. input.Length -> s[i][19..]]
-let tests         = input |> fun s -> [for i in 3 .. 7 .. input.Length -> s[i][21..] |> int64]
-let trues         = input |> fun s -> [for i in 4 .. 7 .. input.Length -> s[i][29..] |> int]
-let falses        = input |> fun s -> [for i in 5 .. 7 .. input.Length -> s[i][29..] |> int]
+let input, lines = System.IO.File.ReadAllLines "inputs/day11.txt" |> fun input -> input, input.Length
+let items, items2 = input |> fun s -> [for i in 1 .. 7 .. lines -> (s[i][18..]).Split ", " |> Array.map int64 |> fun x -> Queue x, Queue x] |> List.unzip
+let operations    = input |> fun s -> [for i in 2 .. 7 .. lines -> s[i][19..]]
+let tests         = input |> fun s -> [for i in 3 .. 7 .. lines -> s[i][21..] |> int64]
+let trues         = input |> fun s -> [for i in 4 .. 7 .. lines -> s[i][29..] |> int]
+let falses        = input |> fun s -> [for i in 5 .. 7 .. lines -> s[i][29..] |> int]
 
 let compute rounds worryReducer (items : int64 Queue list) =
     let inspections = Array.zeroCreate items.Length
