@@ -7,7 +7,7 @@ let tests         = input |> fun s -> [for i in 3 .. 7 .. input.Length -> s[i][2
 let trues         = input |> fun s -> [for i in 4 .. 7 .. input.Length -> s[i][29..] |> int]
 let falses        = input |> fun s -> [for i in 5 .. 7 .. input.Length -> s[i][29..] |> int]
 
-let compute rounds worryReducer (items : list<Queue<int64>>) =
+let compute rounds worryReducer (items : int64 Queue list) =
     let inspections = Array.zeroCreate items.Length
     [ for _ in 1 .. rounds ->
         items 
