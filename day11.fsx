@@ -10,8 +10,7 @@ let falses         = input |> fun s -> [for i in 5 .. 7 .. lines -> s[i][29..] |
 let compute rounds worryReducer (items : int64 Queue list) =
     let inspections = Array.zeroCreate items.Length
     for _ = 1 to rounds do
-        items 
-        |> List.iteri (fun monkey queue ->
+        items |> List.iteri (fun monkey queue ->
             while queue |> Seq.isEmpty |> not do
                 queue.Dequeue()
                 |> fun item -> operations[monkey].Replace("old", string item).Split " "
