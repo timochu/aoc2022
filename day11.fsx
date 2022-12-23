@@ -20,7 +20,7 @@ let compute rounds worryReducer (items : list<Queue<int64>>) =
                 |> fun (worry : int64) ->
                     let dst = if worry % tests[monkey] = 0 then trues[monkey] else falses[monkey]
                     items[dst].Enqueue worry
-                inspections[monkey] <- (inspections[monkey]+1UL)
+                inspections[monkey] <- inspections[monkey] + 1UL
             )
     ] |> ignore
     inspections |> Array.sortDescending |> Array.take 2 |> Array.map uint64 |> Array.reduce (*)
