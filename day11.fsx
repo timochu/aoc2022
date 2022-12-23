@@ -9,7 +9,7 @@ let falses        = input |> fun s -> [for i in 5 .. 7 .. input.Length -> s[i][2
 
 let compute rounds worryReducer (items : int64 Queue list) =
     let inspections = Array.zeroCreate items.Length
-    [ for _ in 1 .. rounds ->
+    for _ = 1 to rounds do
         items 
         |> List.iteri (fun monkey queue ->
             while queue |> Seq.isEmpty |> not do
@@ -22,7 +22,6 @@ let compute rounds worryReducer (items : int64 Queue list) =
                     items[dst].Enqueue worry
                 inspections[monkey] <- inspections[monkey] + 1UL
             )
-    ] |> ignore
     inspections |> Array.sortDescending |> Array.take 2 |> Array.map uint64 |> Array.reduce (*)
 
 printfn "Part 1: %i" (items |> compute 20 (fun  worry -> worry / 3L))
