@@ -1,6 +1,6 @@
 open System.Collections.Generic
 
-let input, lines = System.IO.File.ReadAllLines "inputs/day11.txt" |> fun input -> input, input.Length
+let input, lines   = System.IO.File.ReadAllLines "inputs/day11.txt" |> fun input -> input, input.Length
 let items1, items2 = input |> fun s -> [for i in 1 .. 7 .. lines -> (s[i][18..]).Split ", " |> Array.map int64 |> fun x -> Queue x, Queue x] |> List.unzip
 let operations     = input |> fun s -> [for i in 2 .. 7 .. lines -> s[i][19..]]
 let tests          = input |> fun s -> [for i in 3 .. 7 .. lines -> s[i][21..] |> int64]
